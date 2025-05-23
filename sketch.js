@@ -70,22 +70,9 @@ function draw() {
       vertex(x, y);
     }
     endShape(CLOSE);
-  }
 
-  if (predictions && predictions.length > 0) {
-    let mouth = predictions[0].parts.mouth;
-    // 計算嘴巴中心
-    let mouthX = 0;
-    let mouthY = 0;
-    for (let pt of mouth) {
-      mouthX += pt._x;
-      mouthY += pt._y;
-    }
-    mouthX /= mouth.length;
-    mouthY /= mouth.length;
-
-    // 如果有鏡像畫面，這裡也要鏡像座標
-    // mouthX = width - mouthX;
+    // 嘴巴中心點（下嘴唇中心，13號點）
+    const [mouthX, mouthY] = keypoints[13];
 
     // 畫嘴巴圖案
     fill(255, 0, 0);
