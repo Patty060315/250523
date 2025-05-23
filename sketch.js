@@ -3,6 +3,7 @@ let facemesh;
 let predictions = [];
 const indices = [409,270,269,267,0,37,39,40,185,61,146,91,181,84,17,314,405,321,375,291];
 const indices2 = [76,77,90,180,85,16,315,404,320,307,306,408,304,303,302,11,72,73,74,184];
+const leftEyeIndices = [243,190,56,28,27,29,30,247,130,25,110,24,23,22,26,112]; // 新增左眼座標
 
 function setup() {
   createCanvas(640, 480).position(
@@ -66,6 +67,18 @@ function draw() {
     // 再畫第二組（反向，避免交錯）
     for (let i = indices2.length - 1; i >= 0; i--) {
       const idx = indices2[i];
+      const [x, y] = keypoints[idx];
+      vertex(x, y);
+    }
+    endShape(CLOSE);
+
+    // 畫左眼線條
+    stroke(0, 0, 255);
+    strokeWeight(2);
+    noFill();
+    beginShape();
+    for (let i = 0; i < leftEyeIndices.length; i++) {
+      const idx = leftEyeIndices[i];
       const [x, y] = keypoints[idx];
       vertex(x, y);
     }
