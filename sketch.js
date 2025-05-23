@@ -1,9 +1,7 @@
 let video;
 let facemesh;
 let predictions = [];
-const indices = [409,270,269,267,0,37,39,40,185,61,146,91,181,84,17,314,405,321,375,291];
-const indices2 = [76,77,90,180,85,16,315,404,320,307,306,408,304,303,302,11,72,73,74,184];
-const leftEyeIndices = [243,190,56,28,27,29,30,247,130,25,110,24,23,22,26,112]; // 新增左眼座標
+const leftEyeLineIndices = [243,190,56,28,27,29,30,247,130,25,110,24,23,22,26,112];
 
 function setup() {
   createCanvas(640, 480).position(
@@ -21,7 +19,7 @@ function setup() {
 }
 
 function modelReady() {
-  // 模型載入完成，可選擇顯示訊息
+  // 模型載入完成
 }
 
 function draw() {
@@ -30,65 +28,16 @@ function draw() {
   if (predictions.length > 0) {
     const keypoints = predictions[0].scaledMesh;
 
-    // 先畫第一組紅色線
+    // 畫左眼紅色粗線
     stroke(255, 0, 0);
-    strokeWeight(2);
+    strokeWeight(15);
     noFill();
-    beginShape();
-    for (let i = 0; i < indices.length; i++) {
-      const idx = indices[i];
-      const [x, y] = keypoints[idx];
-      vertex(x, y);
+    for (let i = 0; i < leftEyeLineIndices.length - 1; i++) {
+      const idxA = leftEyeLineIndices[i];
+      const idxB = leftEyeLineIndices[i + 1];
+      const [xA, yA] = keypoints[idxA];
+      const [xB, yB] = keypoints[idxB];
+      line(xA, yA, xB, yB);
     }
-    endShape();
-
-    // 再畫第二組紅色線並填滿黃色
-    stroke(255, 0, 0);
-    strokeWeight(2);
-    fill(255, 255, 0, 200); // 半透明黃色
-    beginShape();
-    for (let i = 0; i < indices2.length; i++) {
-      const idx = indices2[i];
-      const [x, y] = keypoints[idx];
-      vertex(x, y);
-    }
-    endShape(CLOSE);
-
-    // 在第一組與第二組之間充滿綠色
-    fill(0, 255, 0, 150); // 半透明綠色
-    noStroke();
-    beginShape();
-    // 先畫第一組
-    for (let i = 0; i < indices.length; i++) {
-      const idx = indices[i];
-      const [x, y] = keypoints[idx];
-      vertex(x, y);
-    }
-    // 再畫第二組（反向，避免交錯）
-    for (let i = indices2.length - 1; i >= 0; i--) {
-      const idx = indices2[i];
-      const [x, y] = keypoints[idx];
-      vertex(x, y);
-    }
-    endShape(CLOSE);
-
-    // 畫左眼線條
-    stroke(0, 0, 255);
-    strokeWeight(2);
-    noFill();
-    beginShape();
-    for (let i = 0; i < leftEyeIndices.length; i++) {
-      const idx = leftEyeIndices[i];
-      const [x, y] = keypoints[idx];
-      vertex(x, y);
-    }
-    endShape(CLOSE);
-
-    // 嘴巴中心點（下嘴唇中心，13號點）
-    const [mouthX, mouthY] = keypoints[13];
-
-    // 畫嘴巴圖案
-    fill(255, 0, 0);
-    ellipse(mouthX, mouthY, 40, 20); // 依嘴巴大小調整
   }
 }
