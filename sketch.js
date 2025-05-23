@@ -71,4 +71,24 @@ function draw() {
     }
     endShape(CLOSE);
   }
+
+  if (predictions && predictions.length > 0) {
+    let mouth = predictions[0].parts.mouth;
+    // 計算嘴巴中心
+    let mouthX = 0;
+    let mouthY = 0;
+    for (let pt of mouth) {
+      mouthX += pt._x;
+      mouthY += pt._y;
+    }
+    mouthX /= mouth.length;
+    mouthY /= mouth.length;
+
+    // 如果有鏡像畫面，這裡也要鏡像座標
+    // mouthX = width - mouthX;
+
+    // 畫嘴巴圖案
+    fill(255, 0, 0);
+    ellipse(mouthX, mouthY, 40, 20); // 依嘴巴大小調整
+  }
 }
